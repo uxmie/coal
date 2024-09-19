@@ -191,6 +191,6 @@ ENDFOREACH(python)
 
 
 if(COAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL)
-  python_install_on_site(hppfcl __init__.py)
-  python_install_on_site(hppfcl viewer.py)
+  python_install_on_site(hppfcl __init__.py COMPONENT hpp-fcl-compatibility)
+  python_install_on_site(hppfcl viewer.py COMPONENT hpp-fcl-compatibility)
 endif()

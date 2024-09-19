@@ -317,7 +317,7 @@ SET(${PROJECT_NAME}_HEADERS
   )
 
 if(COAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL)
-  LIST(APPEND ${PROJECT_NAME}_HEADERS
+  SET(HPP_FCL_BACKWARD_COMPATIBILITY_HEADERS
     include/hpp/fcl/broadphase/broadphase_bruteforce.h
     include/hpp/fcl/broadphase/broadphase_callbacks.h
     include/hpp/fcl/broadphase/broadphase_collision_manager.h
@@ -444,6 +444,8 @@ if(COAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL)
     include/hpp/fcl/timings.h
     include/hpp/fcl/warning.hh
     )
+  LIST(APPEND ${PROJECT_NAME}_HEADERS ${HPP_FCL_BACKWARD_COMPATIBILITY_HEADERS})
+  HEADER_INSTALL(COMPONENT hpp-fcl-compatibility ${HPP_FCL_BACKWARD_COMPATIBILITY_HEADERS})
 endif()
 
 IF(COAL_HAS_OCTOMAP)
@@ -485,7 +487,11 @@ if(COAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL)
   write_basic_package_version_file(hpp-fclConfigVersion.cmake
       VERSION 3.0.0
       COMPATIBILITY AnyNewerVersion)
-  install(FILES hpp-fclConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/hpp-fclConfigVersion.cmake DESTINATION lib/cmake/hpp-fcl)
+  install(FILES hpp-fclConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/hpp-fclConfigVersion.cmake
+          DESTINATION lib/cmake/hpp-fcl
+          COMPONENT hpp-fcl-compatibility)
+  include("${JRL_CMAKE_MODULES}/install-helpers.cmake")
+  add_install_target(NAME hpp-fcl-compatibility COMPONENT hpp-fcl-compatibility)
 endif()
 
 setup_project_finalize()
