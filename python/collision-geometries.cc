@@ -577,8 +577,7 @@ void exposeCollisionGeometries() {
            "Check whether two AABB are overlaping and return the overloaping "
            "part if true.")
 
-      .def("distance",
-           (CoalScalar(AABB::*)(const AABB&) const) & AABB::distance,
+      .def("distance", (CoalScalar(AABB::*)(const AABB&) const)&AABB::distance,
            bp::args("self", "other"), "Distance between two AABBs.")
       //    .def("distance",
       //         AABB_distance_proxy,
@@ -643,10 +642,10 @@ void exposeCollisionGeometries() {
 #endif
       ;
 
-  def("translate", (AABB(*)(const AABB&, const Vec3s&)) & translate,
+  def("translate", (AABB(*)(const AABB&, const Vec3s&))&translate,
       bp::args("aabb", "t"), "Translate the center of AABB by t");
 
-  def("rotate", (AABB(*)(const AABB&, const Matrix3s&)) & rotate,
+  def("rotate", (AABB(*)(const AABB&, const Matrix3s&))&rotate,
       bp::args("aabb", "R"), "Rotate the AABB object by R");
 
   if (!eigenpy::register_symbolic_link_to_registered_type<
