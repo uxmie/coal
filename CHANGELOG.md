@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [3.0.0] - 2024-11-20
+
 ### Added
 - Renaming the library from `hpp-fcl` to `coal`. Created a `COAL_BACKWARD_COMPATIBILITY_WITH_HPP_FCL` CMake option for retro compatibility. This allows to still do `find_package(hpp-fcl)` and `#include <hpp/fcl/...>` in C++ and it allows to still do `import hppfcl` in python ([#596](https://github.com/humanoid-path-planner/hpp-fcl/pull/596)).
 - Added `Transform3f::Random` and `Transform3f::setRandom` ([#584](https://github.com/humanoid-path-planner/hpp-fcl/pull/584))
@@ -525,7 +527,8 @@ Now Eigen is at the heart of linear algebra computations.
 First release
 
 
-[Unreleased]: https://github.com/humanoid-path-planner/hpp-fcl/compare/v2.4.5...HEAD
+[Unreleased]: https://github.com/humanoid-path-planner/hpp-fcl/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/humanoid-path-planner/hpp-fcl/compare/v2.4.5...v3.0.0
 [2.4.5]: https://github.com/humanoid-path-planner/hpp-fcl/compare/v2.4.4...v2.4.5
 [2.4.4]: https://github.com/humanoid-path-planner/hpp-fcl/compare/v2.4.3...v2.4.4
 [2.4.3]: https://github.com/humanoid-path-planner/hpp-fcl/compare/v2.4.2...v2.4.3
