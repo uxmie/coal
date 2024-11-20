@@ -1,4 +1,4 @@
-# HPP-FCL — An extension of the Flexible Collision Library
+# Coal — An extension of the Flexible Collision Library
 
 <p align="center">
   <a href="https://gepgitlab.laas.fr/humanoid-path-planner/hpp-fcl/commits/master/"><img src="https://gepgitlab.laas.fr/humanoid-path-planner/hpp-fcl/badges/master/pipeline.svg" alt="Pipeline status"/></a>
@@ -11,16 +11,16 @@
   <a href="https://github.com/astral-sh/ruff"><img alt="ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json"></a>
 </p>
 
-[FCL](https://github.com/flexible-collision-library/fcl) was forked in 2015.
-Since then, a large part of the code has been rewritten or removed (for the unused and untested part).
-The broad phase was reintroduced by [Justin Carpentier](https://github.com/jcarpent) in 2022 based on the FCL version 0.7.0.
+[FCL](https://github.com/flexible-collision-library/fcl) was forked in 2015, creating a new project called HPP-FCL.
+Since then, a large part of the code has been rewritten or removed (for the unused and untested part), and new features have been developped (see below).
+Due to these major changes, it was decided in 2024 to rename the HPP-FCL project to **Coal**.
 
-If you use **HPP-FCL** in your projects and research papers, we would appreciate it if you'd [cite it](https://raw.githubusercontent.com/humanoid-path-planner/hpp-fcl/devel/CITATION.bib).
+If you use **Coal** in your projects and research papers, we would appreciate it if you'd [cite it](https://raw.githubusercontent.com/coal-library/coal/devel/CITATION.bib).
 
 ## New features
 
 Compared to the original [FCL](https://github.com/flexible-collision-library/fcl) library, the main new features are:
-- a dedicated and efficient implementation of the GJK algorithm (we do not rely anymore on [libccd](https://github.com/danfis/libccd))
+- dedicated and efficient implementations of the GJK and the EPA algorithms (we do not rely on [libccd](https://github.com/danfis/libccd))
 - the support of safety margins for collision detection
 - an accelerated version of collision detection *à la Nesterov*, which leads to increased performances (up to a factor of 2). More details are available in this [paper](https://hal.archives-ouvertes.fr/hal-03662157/)
 - the computation of a lower bound of the distance between two objects when collision checking is performed, and no collision is found
@@ -30,13 +30,15 @@ Compared to the original [FCL](https://github.com/flexible-collision-library/fcl
 - efficient computation of **contact points** and **contact patches** between objects
 - full support of object serialization via Boost.Serialization
 
-This project is now used in many robotics frameworks such as [Pinocchio](https://github.com/stack-of-tasks/pinocchio), an open-source software that implements efficient and versatile rigid body dynamics algorithms, the [Humanoid Path Planner](https://humanoid-path-planner.github.io/hpp-doc), an open-source software for Motion and Manipulation Planning. **HPP-FCL** has also been recently used to develop [Simple](https://github.com/Simple-Robotics/Simple), a new (differentiable) and efficient simulator for robotics and beyond.
+Note: the broad phase was reintroduced by [Justin Carpentier](https://github.com/jcarpent) in 2022, based on the FCL version 0.7.0.
+
+This project is now used in many robotics frameworks such as [Pinocchio](https://github.com/stack-of-tasks/pinocchio), an open-source software that implements efficient and versatile rigid body dynamics algorithms, the [Humanoid Path Planner](https://humanoid-path-planner.github.io/hpp-doc), an open-source software for Motion and Manipulation Planning. **Coal** has also been recently used to develop [Simple](https://github.com/Simple-Robotics/Simple), a new (differentiable) and efficient simulator for robotics and beyond.
 
 ## A high-performance library
 
-Unlike the original FCL library, HPP-FCL implements the well-established [GJK algorithm](https://en.wikipedia.org/wiki/Gilbert%E2%80%93Johnson%E2%80%93Keerthi_distance_algorithm) and [its variants](https://hal.archives-ouvertes.fr/hal-03662157/) for collision detection and distance computation. These implementations lead to state-of-the-art performances, as depicted by the figures below.
+Unlike the original FCL library, Coal implements the well-established [GJK algorithm](https://en.wikipedia.org/wiki/Gilbert%E2%80%93Johnson%E2%80%93Keerthi_distance_algorithm) and [its variants](https://hal.archives-ouvertes.fr/hal-03662157/) for collision detection and distance computation. These implementations lead to state-of-the-art performances, as depicted by the figures below.
 
-On the one hand, we have benchmarked HPP-FCL against major software alternatives of the state of the art:
+On the one hand, we have benchmarked Coal against major software alternatives of the state of the art:
 1. the [Bullet simulator](https://github.com/bulletphysics/bullet3),
 2. the original [FCL library](https://github.com/flexible-collision-library/fcl) (used in the [Drake framework]()),
 3. the [libccd library](https://github.com/danfis/libccd) (used in [MuJoCo](http://mujoco.org/)).
@@ -45,13 +47,13 @@ The results are depicted in the following figure, which notably shows that the a
 Please notice that the y-axis is in log scale.
 
 <p align="center">
-  <img src="./doc/images/hpp-fcl-vs-the-rest-of-the-world.png" width="600" alt="HPP-FCL vs the rest of the world" align="center"/>
+  <img src="./doc/images/coal-vs-the-rest-of-the-world.png" width="600" alt="Coal vs the rest of the world" align="center"/>
 </p>
 
-On the other hand, why do we care about dedicated collision detection solvers like GJK for the narrow phase? Why can't we simply formulate the collision detection problem as a quadratic problem and call an off-the-shelf optimization solver like [ProxQP](https://github.com/Simple-Robotics/proxsuite))? Here is why.
+On the other hand, why do we care about dedicated collision detection solvers like GJK for the narrow phase? Why can't we simply formulate the collision detection problem as a quadratic problem and call an off-the-shelf optimization solver like [ProxQP](https://github.com/Simple-Robotics/proxsuite))? Here is why:
 
 <p align="center">
-  <img src="./doc/images/hpp-fcl-performances.jpg" width="600" alt="HPP-FCL vs generic QP solvers" align="center"/>
+  <img src="./doc/images/coal-performances.jpg" width="600" alt="Coal vs generic QP solvers" align="center"/>
 </p>
 
 One can observe that GJK-based approaches largely outperform solutions based on classic optimization solvers (e.g., QP solver like [ProxQP](https://github.com/Simple-Robotics/proxsuite)), notably for large geometries composed of tens or hundreds of vertices.
@@ -67,16 +69,16 @@ One can observe that GJK-based approaches largely outperform solutions based on 
 - [ocs2](https://github.com/leggedrobotics/ocs2) A toolbox for Optimal Control for Switched Systems (OCS2)
 
 ## C++ example
-Both the C++ library and the python bindings can be installed as simply as `conda -c conda-forge install hpp-fcl`.
+Both the C++ library and the python bindings can be installed as simply as `conda -c conda-forge install coal`.
 The `.so` library, include files and python bindings will then be installed under `$CONDA_PREFIX/lib`, `$CONDA_PREFIX/include` and `$CONDA_PREFIX/lib/python3.XX/site-packages`.
 
-Here is an example of using HPP-FCL in C++:
+Here is an example of using Coal in C++:
 ```cpp
-#include "hpp/fcl/math/transform.h"
-#include "hpp/fcl/mesh_loader/loader.h"
-#include "hpp/fcl/BVH/BVH_model.h"
-#include "hpp/fcl/collision.h"
-#include "hpp/fcl/collision_data.h"
+#include "coal/math/transform.h"
+#include "coal/mesh_loader/loader.h"
+#include "coal/BVH/BVH_model.h"
+#include "coal/collision.h"
+#include "coal/collision_data.h"
 #include <iostream>
 #include <memory>
 
@@ -158,14 +160,14 @@ int main() {
 ```
 
 ## Python example
-Here is the C++ example from above translated in python using HPP-FCL's python bindings:
+Here is the C++ example from above translated in python using the python bindings of Coal:
 ```python
 import numpy as np
 import coal
 # Optional:
 # The Pinocchio library is a rigid body algorithms library and has a handy SE3 module.
 # It can be installed as simply as `conda -c conda-forge install pinocchio`.
-# Installing pinocchio also installs hpp-fcl.
+# Installing pinocchio also installs coal.
 import pinocchio as pin
 
 def loadConvexMesh(file_name: str):
@@ -211,4 +213,4 @@ if __name__ == "__main__":
 
 ## Acknowledgments
 
-The development of **HPP-FCL** is actively supported by the [Gepetto team](http://projects.laas.fr/gepetto/) [@LAAS-CNRS](http://www.laas.fr), the [Willow team](https://www.di.ens.fr/willow/) [@INRIA](http://www.inria.fr) and, to some extend, [Eureka Robotics](https://eurekarobotics.com/).
+The development of **Coal** is actively supported by the [Gepetto team](http://projects.laas.fr/gepetto/) [@LAAS-CNRS](http://www.laas.fr), the [Willow team](https://www.di.ens.fr/willow/) [@INRIA](http://www.inria.fr) and, to some extend, [Eureka Robotics](https://eurekarobotics.com/).
