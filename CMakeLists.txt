@@ -110,6 +110,16 @@ SET(CMAKE_MODULE_PATH
   ${JRL_CMAKE_MODULES}/find-external/assimp/
   ${CMAKE_MODULE_PATH})
 
+FUNCTION(set_standard_output_directory target)
+  SET_TARGET_PROPERTIES(
+    ${target}
+    PROPERTIES
+      RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin
+      LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib
+      ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib
+  )
+ENDFUNCTION()
+
 set_default_cmake_build_type("RelWithDebInfo")
 
 # If needed, fix CMake policy for APPLE systems
@@ -120,19 +130,6 @@ PROJECT(${PROJECT_NAME} ${PROJECT_ARGS})
 
 OPTION(BUILD_PYTHON_INTERFACE "Build the python bindings" ON)
 CMAKE_DEPENDENT_OPTION(GENERATE_PYTHON_STUBS "Generate the Python stubs associated to the Python library" OFF BUILD_PYTHON_INTERFACE OFF)
-
-#IF(WIN32)
-#  # Set default Windows build paths
-#  SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY
-#    ${PROJECT_BINARY_DIR}/Bin
-#    CACHE PATH "Single directory for all libraries")
-#  SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY
-#    ${PROJECT_BINARY_DIR}/Bin
-#    CACHE PATH "Single directory for all executables")
-#  SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-#    ${PROJECT_BINARY_DIR}/Bin
-#    CACHE PATH "Sing$le directory for all archives")
-#ENDIF(WIN32)
 
 ADD_PROJECT_DEPENDENCY(Eigen3 REQUIRED PKG_CONFIG_REQUIRES "eigen3 >= 3.0.0")
 
