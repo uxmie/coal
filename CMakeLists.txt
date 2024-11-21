@@ -91,13 +91,16 @@ else()
 endif()
 
 # Use BoostConfig module distributed by boost library instead of using FindBoost module distributed
-# by CMake
-if(POLICY CMP0167)
-  cmake_policy(SET CMP0167 NEW)
-  # Set a default value to this policy to avoid issue with find_dependency
-  # macro redefinition with different policy in some modules.
-  set(CMAKE_POLICY_DEFAULT_CMP0167 NEW)
-endif()
+# by CMake.
+# There is one unresolved issue with FindBoost and clang-cl so we deactivate it in this case.
+IF(NOT WIN32 OR NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+  IF(POLICY CMP0167)
+    CMAKE_POLICY(SET CMP0167 NEW)
+    # Set a default value to this policy to avoid issue with find_dependency
+    # macro redefinition with different policy in some modules.
+    SET(CMAKE_POLICY_DEFAULT_CMP0167 NEW)
+  ENDIF()
+ENDIF()
 
 include("${JRL_CMAKE_MODULES}/boost.cmake")
 include("${JRL_CMAKE_MODULES}/python.cmake")
