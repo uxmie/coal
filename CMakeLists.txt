@@ -36,6 +36,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CXX_DISABLE_WERROR TRUE)
 
 set(PROJECT_NAME coal)
+set(PROJECT_ORG "coal-library")
 set(PROJECT_DESCRIPTION
   "Coal, The Collision Detection Library. Previously known as HPP-FCL, fork of FCL -- The Flexible Collision Library"
   )
