@@ -34,6 +34,7 @@
 
 cmake_minimum_required(VERSION 3.10)
 set(CXX_DISABLE_WERROR TRUE)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(PROJECT_NAME coal)
 set(PROJECT_ORG "coal-library")

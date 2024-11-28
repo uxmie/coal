@@ -75,6 +75,7 @@ set_tests_properties(${PROJECT_NAME}-broadphase PROPERTIES WILL_FAIL TRUE)
 add_coal_test(broadphase_dynamic_AABB_tree broadphase_dynamic_AABB_tree.cpp)
 add_coal_test(broadphase_collision_1 broadphase_collision_1.cpp)
 add_coal_test(broadphase_collision_2 broadphase_collision_2.cpp)
+add_coal_test(tri_tri_collision tri_tri_collision.cpp)
 
 ## Benchmark
 set(test_benchmark_target ${PROJECT_NAME}-test-benchmark)
