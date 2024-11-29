@@ -364,22 +364,16 @@ CoalScalar ShapeShapeDistance<TriangleP, TriangleP>(
     const GJKSolver* solver, const bool, Vec3s& p1, Vec3s& p2, Vec3s& normal) {
   // Transform the triangles in world frame
   const TriangleP& s1 = static_cast<const TriangleP&>(*o1);
-  const TriangleP t1(tf1.transform(s1.a), tf1.transform(s1.b),
-                     tf1.transform(s1.c));
-  // TriangleP t1(tf1.transform(s1.a), tf1.transform(s1.b),
-  // tf1.transform(s1.c));
+  TriangleP t1(tf1.transform(s1.a), tf1.transform(s1.b), tf1.transform(s1.c));
 
   const TriangleP& s2 = static_cast<const TriangleP&>(*o2);
-  const TriangleP t2(tf2.transform(s2.a), tf2.transform(s2.b),
-                     tf2.transform(s2.c));
-  // TriangleP t2(tf2.transform(s2.a), tf2.transform(s2.b),
-  // tf2.transform(s2.c));
-  //
-  Vec3s T1s[] = {t1.a, t1.b, t1.c};
-  Vec3s T2s[] = {t2.a, t2.b, t2.c};
-  CoalScalar d = triDistance(T1s, T2s, p1, p2);
-  normal = (p2 - p1).normalized();
-  return d;
+  TriangleP t2(tf2.transform(s2.a), tf2.transform(s2.b), tf2.transform(s2.c));
+
+  // Vec3s T1s[] = {t1.a, t1.b, t1.c};
+  // Vec3s T2s[] = {t2.a, t2.b, t2.c};
+  // CoalScalar d = triDistance(T1s, T2s, p1, p2);
+  // normal = (p2 - p1).normalized();
+  // return d;
 
   // // Reset GJK algorithm
   // //   We don't need to take into account swept-sphere radius in GJK
@@ -430,63 +424,58 @@ CoalScalar ShapeShapeDistance<TriangleP, TriangleP>(
   //
   // return distance;
 
-  // auto detTest = [](const Vec3s& a, const Vec3s& b, const Vec3s& c,
-  //                   const Vec3s& d) -> CoalScalar {
-  //   return (a - d).cross(b - d).dot(a - c);
-  // };
-  // auto step = [](CoalScalar val) -> int_fast8_t {
-  //   return val < 0 ? -1 : (val > 0 ? 1 : 0);
-  // };
-  // auto permutateTriangles = [detTest, step](TriangleP& ta, TriangleP& tb) {
-  //   std::array<int_fast8_t, 3> pointWisePlaneSide;
-  //   pointWisePlaneSide[0] = step(detTest(tb.a, tb.b, tb.c, ta.a));
-  //   pointWisePlaneSide[1] = step(detTest(tb.a, tb.b, tb.c, ta.b));
-  //   pointWisePlaneSide[2] = step(detTest(tb.a, tb.b, tb.c, ta.c));
-  //
-  //   if (pointWisePlaneSide[1] * pointWisePlaneSide[2] >= 0) {
-  //     if (pointWisePlaneSide[0] < 0) {
-  //       Vec3s v = tb.b;
-  //       tb.b = tb.c;
-  //       tb.c = v;
-  //     }
-  //   } else if (pointWisePlaneSide[0] * pointWisePlaneSide[2] >= 0) {
-  //     Vec3s v = ta.b;
-  //     ta.b = ta.c;
-  //     ta.c = ta.a;
-  //     ta.a = v;
-  //     if (pointWisePlaneSide[1] < 0) {
-  //       Vec3s v = tb.b;
-  //       tb.b = tb.c;
-  //       tb.c = v;
-  //     }
-  //   } else if (pointWisePlaneSide[0] * pointWisePlaneSide[1] >= 0) {
-  //     Vec3s v = ta.c;
-  //     ta.c = ta.b;
-  //     ta.b = ta.a;
-  //     ta.a = v;
-  //     if (pointWisePlaneSide[2] < 0) {
-  //       Vec3s v = tb.b;
-  //       tb.b = tb.c;
-  //       tb.c = v;
-  //     }
-  //   }
-  // };
-  // permutateTriangles(t1, t2);
-  // permutateTriangles(t2, t1);
-  //
-  // std::cout << t1.a.transpose() << " " << t1.b.transpose() << " "
-  //           << t1.c.transpose() << std::endl;
-  // std::cout << t2.a.transpose() << " " << t2.b.transpose() << " "
-  //           << t2.c.transpose() << std::endl;
-  //
-  // std::cout << detTest(t1.a, t1.b, t2.a, t2.b) << " "
-  //           << detTest(t1.a, t1.c, t2.c, t2.a) << std::endl;
-  // if (detTest(t1.a, t1.b, t2.a, t2.b) <= 0 &&
-  //     detTest(t1.a, t1.c, t2.c, t2.a) <= 0) {
-  //   return -1;
-  // } else {
-  //   return 1;
-  // }
+  Vec3s* T1s[] = {&t1.a, &t1.b, &t1.c};
+  Vec3s* T2s[] = {&t2.a, &t2.b, &t2.c};
+  auto detTest = [](const Vec3s& a, const Vec3s& b, const Vec3s& c,
+                    const Vec3s& d) -> CoalScalar {
+    return (a - d).cross(b - d).dot(a - c);
+  };
+  auto step = [](CoalScalar val) -> int_fast8_t {
+    return val < 0 ? -1 : (val > 0 ? 1 : 0);
+  };
+  auto permutateTriangles = [step](Vec3s** ta, Vec3s** tb) {
+    std::array<int_fast8_t, 3> pointSide;
+	Vec3s n = (*tb[1] - *tb[0]).cross(*tb[2] - *tb[0]);
+    pointSide[0] = step(n.dot(*ta[0] - *tb[0]));
+    pointSide[1] = step(n.dot(*ta[1] - *tb[0]));
+    pointSide[2] = step(n.dot(*ta[2] - *tb[0]));
+
+    if ((pointSide[0] > 0 && pointSide[1] > 0 && pointSide[2] > 0) ||
+        (pointSide[0] < 0 && pointSide[1] < 0 && pointSide[2] < 0)) {
+      return false;
+    }
+
+    if (pointSide[1] * pointSide[2] >= 0) {
+      if (pointSide[0] < 0) {
+        std::swap(tb[1], tb[2]);
+      }
+    } else if (pointSide[0] * pointSide[2] >= 0) {
+      std::swap(ta[0], ta[1]);
+      std::swap(ta[2], ta[1]);
+      if (pointSide[1] < 0) {
+        std::swap(tb[1], tb[2]);
+      }
+    } else if (pointSide[0] * pointSide[1] >= 0) {
+      std::swap(ta[0], ta[2]);
+      std::swap(ta[2], ta[1]);
+      if (pointSide[2] < 0) {
+        std::swap(tb[1], tb[2]);
+      }
+    }
+	return true;
+  };
+  if ( !permutateTriangles(T1s, T2s) || !permutateTriangles(T2s, T1s) ) {
+	  // Vec3s T1[] = {t1.a, t1.b, t1.c};
+	  // Vec3s T2[] = {t2.a, t2.b, t2.c};
+	  // CoalScalar d = triDistance(T1, T2, p1, p2);
+	  return 1;
+  }
+  if (detTest(*T1s[0], *T1s[1], *T2s[0], *T2s[1]) <= 0 &&
+      detTest(*T1s[0], *T1s[2], *T2s[2], *T2s[0]) <= 0) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 }  // namespace internal
 
